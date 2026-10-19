@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Marco de Carta de Tarot estilo Rider-Waite (El Colgado) -->
+  <rect x="10" y="4" width="44" height="56" rx="6" fill="#f7f3eb" stroke="#231d1b" stroke-width="3"/>
+  <rect x="14" y="8" width="36" height="48" rx="3.5" fill="#8c2d29" stroke="#b89146" stroke-width="1.5"/>
+  
+  <!-- Aureola dorada mística y Luna creciente -->
+  <circle cx="32" cy="32" r="12" stroke="#f7f3eb" stroke-width="1.2" stroke-dasharray="2.5 2.5" opacity="0.85"/>
+  <path d="M35.5 23.5A8.5 8.5 0 1 0 35.5 40.5A6.8 6.8 0 1 1 35.5 23.5Z" fill="#f7f3eb"/>
+  
+  <!-- Destellos de hechizo -->
+  <path d="M32 12L33.2 15.8L37 17L33.2 18.2L32 22L30.8 18.2L27 17L30.8 15.8L32 12Z" fill="#b89146"/>
+  <circle cx="32" cy="48" r="2" fill="#b89146"/>
+</svg>

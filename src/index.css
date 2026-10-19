@@ -1,0 +1,54 @@
+:root {
+  /* Paleta extraída de tu foto con El Colgado (Arcano XII) */
+  --bg-outer: #2e1d1c; /* Fondo exterior profundo como en Carrd */
+  --bg-outer-gradient: radial-gradient(circle at 50% 20%, #442725 0%, #1c1313 100%);
+  
+  --card-surface: #f7f3eb; /* Papel crema cálido de la carta y fondo de tu foto */
+  --card-surface-alt: #efe9dc; /* Tono intermedio para barras y separadores */
+  
+  --ink-primary: #231d1b; /* Negro tinta cálido */
+  --ink-secondary: #5e534d; /* Texto descriptivo */
+  --ink-muted: #8c7f77;
+  
+  --crimson: #8c2d29; /* Rojo calzas de El Colgado */
+  --crimson-soft: #e6cbc8; /* Equivalente suave y prolijo al rosa de la referencia */
+  --crimson-hover: #74221f;
+  
+  --slate: #385766; /* Azul túnica de El Colgado */
+  --slate-soft: #d5e0e5;
+  
+  --gold: #b89146; /* Halo dorado de El Colgado */
+  --line-divider: rgba(140, 45, 41, 0.22);
+
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg-outer);
+  background-image: var(--bg-outer-gradient);
+  color: var(--ink-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
