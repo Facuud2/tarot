@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import './App.css'
 import {
-  formatPublicPriceLine,
+  formatDualAmount,
+  resolveTierDiscount,
   usePublicSpellsCatalog,
 } from './hooks/usePublicSpellsCatalog'
 
@@ -65,7 +66,7 @@ export function App() {
             {view !== 'home' && (
               <button
                 type="button"
-                className="hero-corner-btn"
+                className="hero-corner-btn hit-44"
                 onClick={() => navigateTo('home')}
                 aria-label="Volver al inicio"
                 title="Volver al inicio"
@@ -91,7 +92,7 @@ export function App() {
                   className="action-pill-btn"
                   onClick={() => navigateTo('lecturas')}
                 >
-                  <span className="action-pill-icon" aria-hidden="true">
+                  <span className="action-pill-icon action-pill-icon--play" aria-hidden="true">
                     ▶
                   </span>
                   <span>Lecturas</span>
@@ -155,6 +156,13 @@ export function App() {
             <div className="view-content">
               <div className="page-section-header">
                 <h1 className="page-hash-title"># Lecturas</h1>
+                <button
+                  type="button"
+                  className="page-back-pill hit-44"
+                  onClick={() => navigateTo('home')}
+                >
+                  ← Inicio
+                </button>
               </div>
 
               {/* 1. LENORMAND */}
@@ -304,6 +312,13 @@ export function App() {
             <div className="view-content">
               <div className="page-section-header">
                 <h1 className="page-hash-title"># Hechizos</h1>
+                <button
+                  type="button"
+                  className="page-back-pill hit-44"
+                  onClick={() => navigateTo('home')}
+                >
+                  ← Inicio
+                </button>
               </div>
 
               {spellCategories.map((category) => (
@@ -311,7 +326,7 @@ export function App() {
                   <h2 className="category-underline-title">{category.name}</h2>
 
                   {category.intro && (
-                    <p className="item-description" style={{ marginBottom: '14px' }}>
+                    <p className="item-description category-intro-text">
                       {category.intro}
                     </p>
                   )}
@@ -319,7 +334,14 @@ export function App() {
                   <div className="catalog-items-stack">
                     {category.spells.map((spell) => (
                       <article key={spell.id} className="catalog-item">
-                        <h3 className="item-title">{spell.title}</h3>
+                        <div className="item-title-row">
+                          <h3 className="item-title">{spell.title}</h3>
+                          {spell.isOffer && (
+                            <span className="offer-badge">
+                              {spell.offerLabel || '¡OFERTA!'}
+                            </span>
+                          )}
+                        </div>
 
                         {spell.subtitleTag && (
                           <span className="item-subtitle-tag">
@@ -333,26 +355,49 @@ export function App() {
 
                         {spell.prices.length > 0 && (
                           <div className="item-prices-list">
-                            {spell.prices.map((price, idx) => (
-                              <span
-                                key={`${spell.id}-p-${idx}`}
-                                className="item-price-line"
-                              >
-                                {formatPublicPriceLine(
-                                  price.label,
-                                  price.priceArs,
-                                  price.priceUsd
-                                )}
-                                {spell.isOffer && idx === 0 && (
-                                  <>
-                                    {' '}
-                                    <span className="offer-badge">
-                                      {spell.offerLabel || '¡OFERTA!'}
+                            {spell.prices.map((price, idx) => {
+                              const discount = resolveTierDiscount(price)
+                              return (
+                                <div
+                                  key={`${spell.id}-p-${idx}`}
+                                  className="item-price-line"
+                                >
+                                  {price.label && (
+                                    <span className="price-tier-label">
+                                      {price.label}:
                                     </span>
-                                  </>
-                                )}
-                              </span>
-                            ))}
+                                  )}
+
+                                  {discount.hasDiscount && (
+                                    <span
+                                      className="price-regular-struck"
+                                      aria-label="Precio anterior sin descuento"
+                                    >
+                                      {formatDualAmount(
+                                        discount.regularPriceArs ??
+                                          price.priceArs,
+                                        discount.regularPriceUsd ??
+                                          price.priceUsd
+                                      )}
+                                    </span>
+                                  )}
+
+                                  <span className="price-current-value">
+                                    {formatDualAmount(
+                                      price.priceArs,
+                                      price.priceUsd
+                                    )}
+                                  </span>
+
+                                  {discount.discountPercent &&
+                                    discount.discountPercent > 0 && (
+                                      <span className="discount-percent-badge">
+                                        -{discount.discountPercent}% OFF
+                                      </span>
+                                    )}
+                                </div>
+                              )
+                            })}
                           </div>
                         )}
                       </article>
@@ -370,6 +415,13 @@ export function App() {
             <div className="view-content">
               <div className="page-section-header">
                 <h1 className="page-hash-title"># Coach & Manifestación (Experimental)</h1>
+                <button
+                  type="button"
+                  className="page-back-pill hit-44"
+                  onClick={() => navigateTo('home')}
+                >
+                  ← Inicio
+                </button>
               </div>
 
               {/* 1. SESIONES Y MÉTODOS BASE */}
@@ -446,7 +498,7 @@ export function App() {
                 href={profile.twitterUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="footer-icon-circle"
+                className="footer-icon-circle hit-44"
                 aria-label="X / Twitter (@eltarotde_luna)"
                 title="X / Twitter (@eltarotde_luna)"
               >
@@ -459,7 +511,7 @@ export function App() {
                 href={profile.instagramUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="footer-icon-circle"
+                className="footer-icon-circle hit-44"
                 aria-label="Instagram (@eltarotde._luna)"
                 title="Instagram (@eltarotde._luna)"
               >

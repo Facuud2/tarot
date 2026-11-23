@@ -20,6 +20,12 @@
   --gold: #b89146; /* Halo dorado de El Colgado */
   --line-divider: rgba(140, 45, 41, 0.22);
 
+  /* Safe area helpers for mobile viewports */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+
   --font-serif: 'Cormorant Garamond', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -31,14 +37,34 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior: none;
+}
+
 html, body {
   min-height: 100%;
   background: var(--bg-outer);
   background-image: var(--bg-outer-gradient);
   color: var(--ink-primary);
   font-family: var(--font-sans);
+  font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@media (pointer: coarse) {
+  input, textarea, select {
+    font-size: 16px;
+  }
+}
+
+button, a, [role="button"], .tappable {
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 button {
@@ -51,4 +77,32 @@ button {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* =========================================================
+   3-Axis Accessibility (Reduced Motion, Transparency, Contrast)
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .info-bio-drawer {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: #1c1413 !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --line-divider: rgba(140, 45, 41, 0.48);
+  }
 }
