@@ -1,10 +1,15 @@
 import { useState } from 'react'
 import './App.css'
+import {
+  formatPublicPriceLine,
+  usePublicSpellsCatalog,
+} from './hooks/usePublicSpellsCatalog'
 
 type ViewState = 'home' | 'lecturas' | 'hechizos' | 'coach'
 
 export function App() {
   const [view, setView] = useState<ViewState>('home')
+  const spellCategories = usePublicSpellsCatalog()
 
   // Datos reales de tus redes y perfil
   const profile = {
@@ -293,7 +298,7 @@ export function App() {
           )}
 
           {/* =========================================================
-              VISTA 2: PÁGINA COMPLETA DE HECHIZOS
+              VISTA 2: PÁGINA COMPLETA DE HECHIZOS (Sincronizada con appHechizos)
              ========================================================= */}
           {view === 'hechizos' && (
             <div className="view-content">
@@ -301,133 +306,60 @@ export function App() {
                 <h1 className="page-hash-title"># Hechizos</h1>
               </div>
 
-              {/* 1. INDIVIDUALES */}
-              <div className="catalog-category-block">
-                <h2 className="category-underline-title">Individuales</h2>
+              {spellCategories.map((category) => (
+                <div key={category.id} className="catalog-category-block">
+                  <h2 className="category-underline-title">{category.name}</h2>
 
-                <div className="catalog-items-stack">
-                  <article className="catalog-item">
-                    <h3 className="item-title">Autoendulzamiento</h3>
-                    <p className="item-description">
-                      Ritual de amor propio diseñado para elevar tu autoestima,
-                      reconectar con tu valor personal y magnetizar energías positivas en
-                      tu día a día.
+                  {category.intro && (
+                    <p className="item-description" style={{ marginBottom: '14px' }}>
+                      {category.intro}
                     </p>
-                    <div className="item-prices-list">
-                      <span className="item-price-line">Simple: $35.000 / 38 USD</span>
-                      <span className="item-price-line">Potenciado: $55.000 / 60 USD</span>
-                    </div>
-                  </article>
+                  )}
 
-                  <article className="catalog-item">
-                    <h3 className="item-title">Corte de lazos</h3>
-                    <p className="item-description">
-                      Ritual de liberación energética para soltar apegos emocionales,
-                      vínculos tóxicos del pasado y energías externas que te drenan.
-                    </p>
-                    <div className="item-prices-list">
-                      <span className="item-price-line">$30.000 / 34 USD</span>
-                    </div>
-                  </article>
+                  <div className="catalog-items-stack">
+                    {category.spells.map((spell) => (
+                      <article key={spell.id} className="catalog-item">
+                        <h3 className="item-title">{spell.title}</h3>
 
-                  <article className="catalog-item">
-                    <h3 className="item-title">Ansi-holic</h3>
-                    <p className="item-description">
-                      Trabajo de armonización para bajar la ansiedad, calmar la mente y
-                      regular el sistema nervioso, devolviéndote tu centro, paz interior
-                      y estabilidad emocional.
-                    </p>
-                    <div className="item-prices-list">
-                      <span className="item-price-line">$28.000 / 31 USD</span>
-                    </div>
-                  </article>
+                        {spell.subtitleTag && (
+                          <span className="item-subtitle-tag">
+                            {spell.subtitleTag}
+                          </span>
+                        )}
+
+                        {spell.description && (
+                          <p className="item-description">{spell.description}</p>
+                        )}
+
+                        {spell.prices.length > 0 && (
+                          <div className="item-prices-list">
+                            {spell.prices.map((price, idx) => (
+                              <span
+                                key={`${spell.id}-p-${idx}`}
+                                className="item-price-line"
+                              >
+                                {formatPublicPriceLine(
+                                  price.label,
+                                  price.priceArs,
+                                  price.priceUsd
+                                )}
+                                {spell.isOffer && idx === 0 && (
+                                  <>
+                                    {' '}
+                                    <span className="offer-badge">
+                                      {spell.offerLabel || '¡OFERTA!'}
+                                    </span>
+                                  </>
+                                )}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </article>
+                    ))}
+                  </div>
                 </div>
-              </div>
-
-              {/* 2. VINCULARES */}
-              <div className="catalog-category-block">
-                <h2 className="category-underline-title">Vinculares</h2>
-
-                <div className="catalog-items-stack">
-                  <article className="catalog-item">
-                    <h3 className="item-title">Endulzamiento</h3>
-                    <p className="item-description">
-                      Potencia el amor, la ternura y el deseo dentro de tu vínculo
-                      sentimental, suavizando roces para recuperar la armonía y la
-                      comunicación fluida.
-                    </p>
-                    <div className="item-prices-list">
-                      <span className="item-price-line">$45.000 / 47 USD</span>
-                    </div>
-                  </article>
-
-                  <article className="catalog-item">
-                    <h3 className="item-title">Retorno</h3>
-                    <p className="item-description">
-                      Trabajo energético enfocado en propiciar el acercamiento y regreso
-                      de un ex vínculo <em>(magia blanca… o quizás no)</em>.
-                    </p>
-                    <div className="item-prices-list">
-                      <span className="item-price-line">
-                        $25.000 / 29 USD <span className="offer-badge">¡OFERTA!</span>
-                      </span>
-                    </div>
-                  </article>
-                </div>
-              </div>
-
-              {/* 3. PERSONALIZADOS Y ALTA INTENSIDAD */}
-              <div className="catalog-category-block">
-                <h2 className="category-underline-title">Personalizados & Alta Magia</h2>
-
-                <p className="item-description" style={{ marginBottom: '14px' }}>
-                  Según tu caso y lo que quieras lograr, podés solicitar un ritual a
-                  medida combinando dos o más trabajos energéticos.{' '}
-                  <strong>Consultame por DM para armar el tuyo.</strong>
-                </p>
-
-                <div className="catalog-items-stack">
-                  <article className="catalog-item">
-                    <h3 className="item-title">Destrabe y purgado</h3>
-                    <span className="item-subtitle-tag">
-                      Limpieza energética profunda + Purgado espiritual
-                    </span>
-                    <p className="item-description">
-                      Ideal para eliminar bloqueos pesados, restos de trabajos mal
-                      cerrados o cargas densas adheridas a tu energía, purificando y
-                      restaurando tu campo áurico por completo.
-                    </p>
-                    <div className="item-prices-list">
-                      <span className="item-price-line">$30.000 / 34 USD</span>
-                    </div>
-                  </article>
-
-                  <article className="catalog-item">
-                    <h3 className="item-title">Desespero y Asfixia Mental</h3>
-                    <p className="item-description">
-                      Trabajo intensivo de intranquilidad y fijación mental para que no
-                      pueda dejar de pensarte ni resistirse a buscarte.{' '}
-                      <strong>—SIN USO DE MAGIA BLANCA—</strong>
-                    </p>
-                    <div className="item-prices-list">
-                      <span className="item-price-line">$50.000 / 55 USD</span>
-                    </div>
-                  </article>
-
-                  <article className="catalog-item">
-                    <h3 className="item-title">Sumisión y dominancia</h3>
-                    <p className="item-description">
-                      Ritual enfocado en doblegar el orgullo de la persona objetivo y
-                      tomar el control energético del vínculo. A diferencia de un dominio
-                      tradicional, fusiona alquimia ritual con arcanos de tarot
-                      consagrados a la hechicería.
-                    </p>
-                    <div className="item-prices-list">
-                      <span className="item-price-line">$35.000 / 38 USD</span>
-                    </div>
-                  </article>
-                </div>
-              </div>
+              ))}
             </div>
           )}
 
